@@ -16,6 +16,13 @@
   
   The only thing you need to do is like that:
   
+  in your hosts file
+  ```
+  hostname1.com
+  hostname2.net:20
+  ```
+  It's able to detect if you have different port running sshd, default is 22 if you don't add :port
+  
   ```go
   package main
 
