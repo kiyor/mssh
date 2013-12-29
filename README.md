@@ -2,7 +2,7 @@
 
   This is useful if you work on bunch of server ( in my case like 200 ) and not able to install some manager system like ansiable. ( I have puppet, but puppet is so slow )
   
-  usually if we need quick run command in multiable server, wo might do this:
+  Usually if we need quick run command in multiable server, we might do this:
   
   ```bash
   for host in `cat hostsfile`; do
@@ -10,11 +10,11 @@
     ssh $host "/usr/bin/sudo ifconfig|grep inet"
   done
   ```
-  If you have less then 10 servers, it's fine, but if you have more, more and more in the future.
+  If you have less then 10 servers, it's fine, but if you have more, more and more in the future...
   
-  This is very light and make it possible
+  This is very light and make it super fast.
   
-  The only thing you need to do is like that
+  The only thing you need to do is like that:
   
   ```go
   package main
