@@ -43,7 +43,7 @@
 	  }
   ```
   ```bash
-  ./yourbinary -hostsfile host -cmd "df -h"
+  ./yourbinary -hostsfile host -cmd "ifconfig|grep inet"
   ```
   That's all, it will send 24 request at same time.
   It's lite, it's quick, you don't need full path, and support nohup.out
