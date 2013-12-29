@@ -186,7 +186,7 @@ func Ssh(hosts []string, conf Conf) []Result {
 			if !conf.Background {
 				r.Res = strip(b.String())
 			} else {
-				r.Res = "command success sent and out put in remote server's /home/max/nohup.out"
+				r.Res = "command success sent and out put in remote server's ~/nohup.out"
 			}
 			color.Printf("@{!g}%s\n", r.Host)
 			fmt.Println(r.Res)
