@@ -18,7 +18,7 @@ import (
 	"code.google.com/p/go.crypto/ssh"
 	"fmt"
 	"github.com/wsxiaoys/terminal/color"
-	"io"
+	// "io"
 	"io/ioutil"
 	"runtime"
 	"strings"
@@ -41,9 +41,9 @@ func (k *keychain) Key(i int) (ssh.PublicKey, error) {
 	return k.keys[i].PublicKey(), nil
 }
 
-func (k *keychain) Sign(i int, rand io.Reader, data []byte) (sig []byte, err error) {
-	return k.keys[i].Sign(rand, data)
-}
+// func (k *keychain) Sign(i int, rand io.Reader, data []byte) (sig []byte, err error) {
+// 	return k.keys[i].Sign(rand, data)
+// }
 
 func (k *keychain) add(key ssh.Signer) {
 	k.keys = append(k.keys, key)
@@ -103,8 +103,8 @@ func Ssh(hosts []string, conf Conf) []Result {
 
 	config := &ssh.ClientConfig{
 		User: conf.User,
-		Auth: []ssh.ClientAuth{
-			ssh.ClientAuthKeyring(k),
+		Auth: []ssh.AuthMethod{
+			ssh.PublicKeys(k.keys[0]),
 		},
 	}
 
