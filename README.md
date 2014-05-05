@@ -28,7 +28,7 @@
 
   import (
 	  "flag"
-	  "github.com/anuaimi/mssh"
+	  "github.com/kiyor/mssh"
   )
 
   var (
