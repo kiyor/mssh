@@ -6,7 +6,7 @@
 
 * Creation Date : 11-18-2013
 
-* Last Modified : Wed 29 Jul 2015 06:30:08 PM PDT
+* Last Modified : Wed 29 Jul 2015 07:05:25 PM PDT
 
 * Created By : Kiyor
 
@@ -63,7 +63,6 @@ func (k *keychain) loadPEM(file string) error {
 type Conf struct {
 	User       string
 	Key        string
-	Agent      net.Conn
 	Command    string
 	Sudo       bool
 	Workers    int
