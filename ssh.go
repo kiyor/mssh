@@ -6,7 +6,7 @@
 
 * Creation Date : 11-18-2013
 
-* Last Modified : Wed 29 Jul 2015 07:05:25 PM PDT
+* Last Modified : Wed 29 Jul 2015 07:07:48 PM PDT
 
 * Created By : Kiyor
 
@@ -91,13 +91,6 @@ func filterHosts(hosts []string) []string {
 }
 
 func Ssh(hosts []string, conf *Conf) []Result {
-	k := new(keychain)
-	// Add path to id_rsa file
-	err := k.loadPEM(conf.Key)
-
-	if err != nil {
-		panic("Cannot load key: " + err.Error())
-	}
 
 	var auth ssh.AuthMethod
 
@@ -105,6 +98,13 @@ func Ssh(hosts []string, conf *Conf) []Result {
 		auth = ssh.PublicKeysCallback(agent.NewClient(conn).Signers)
 		defer conn.Close()
 	} else {
+		k := new(keychain)
+		// Add path to id_rsa file
+		err := k.loadPEM(conf.Key)
+
+		if err != nil {
+			panic("Cannot load key: " + err.Error())
+		}
 		auth = ssh.PublicKeys(k.keys[0])
 	}
 
