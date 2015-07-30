@@ -6,7 +6,7 @@
 
 * Creation Date : 11-18-2013
 
-* Last Modified : Sun 29 Dec 2013 09:18:47 PM UTC
+* Last Modified : Wed 29 Jul 2015 06:30:08 PM PDT
 
 * Created By : Kiyor
 
@@ -15,11 +15,13 @@ package mssh
 
 import (
 	"bytes"
-	"code.google.com/p/go.crypto/ssh"
 	"fmt"
 	"github.com/wsxiaoys/terminal/color"
-	// "io"
+	"golang.org/x/crypto/ssh"
+	"golang.org/x/crypto/ssh/agent"
 	"io/ioutil"
+	"net"
+	"os"
 	"runtime"
 	"strings"
 	"sync"
@@ -41,10 +43,6 @@ func (k *keychain) Key(i int) (ssh.PublicKey, error) {
 	return k.keys[i].PublicKey(), nil
 }
 
-// func (k *keychain) Sign(i int, rand io.Reader, data []byte) (sig []byte, err error) {
-// 	return k.keys[i].Sign(rand, data)
-// }
-
 func (k *keychain) add(key ssh.Signer) {
 	k.keys = append(k.keys, key)
 }
@@ -65,6 +63,7 @@ func (k *keychain) loadPEM(file string) error {
 type Conf struct {
 	User       string
 	Key        string
+	Agent      net.Conn
 	Command    string
 	Sudo       bool
 	Workers    int
@@ -92,7 +91,7 @@ func filterHosts(hosts []string) []string {
 	return res
 }
 
-func Ssh(hosts []string, conf Conf) []Result {
+func Ssh(hosts []string, conf *Conf) []Result {
 	k := new(keychain)
 	// Add path to id_rsa file
 	err := k.loadPEM(conf.Key)
@@ -101,10 +100,19 @@ func Ssh(hosts []string, conf Conf) []Result {
 		panic("Cannot load key: " + err.Error())
 	}
 
+	var auth ssh.AuthMethod
+
+	if conn, err := net.Dial("unix", os.Getenv("SSH_AUTH_SOCK")); err == nil {
+		auth = ssh.PublicKeysCallback(agent.NewClient(conn).Signers)
+		defer conn.Close()
+	} else {
+		auth = ssh.PublicKeys(k.keys[0])
+	}
+
 	config := &ssh.ClientConfig{
 		User: conf.User,
 		Auth: []ssh.AuthMethod{
-			ssh.PublicKeys(k.keys[0]),
+			auth,
 		},
 	}
 
